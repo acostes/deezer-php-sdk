@@ -83,10 +83,10 @@ abstract class Dz_Model_Abstract {
 
     private function _retrieveConnectionData($type, $url) {
         if (!$url) {
-            $results = json_decode(file_get_contents(DEEZER_API_URL . '/' . strtolower(get_called_class()) . '/' . $this->id . '/' . strtolower($type)));
-        } else {
-            $results = json_decode(file_get_contents($url));
+            $url = DEEZER_API_URL . '/' . strtolower(get_called_class()) . '/' . $this->id . '/' . strtolower($type);
         }
+
+        $results = json_decode(file_get_contents($url));
 
         foreach ($results->data as $result) {
             array_push($this->_connectionData, $result); 
