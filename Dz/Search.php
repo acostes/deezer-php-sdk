@@ -59,13 +59,31 @@ class Dz_Search {
 
 
     public function search() {
-        $this->_results = json_decode(file_get_contents(DEEZER_API_URL . '/search/' . $this->_type . '?q=' . $this->_query));
+        $url = DEEZER_API_URL . '/search/' . $this->_type . '?q=' . $this->_query;
+
+        $this->_results = array();
+
+        $this->_parse($url);
+
         return $this->_getAllDatas();
+    }
+
+    protected function _parse($url) {
+        $results = json_decode(file_get_contents($url));
+
+        foreach ($results->data as $result) {
+            array_push($this->_results, $result);
+        }
+
+        if (isset($results->next)) {
+            $this->_parse($results->next);
+        }
+
     }
 
     protected function _getAllDatas() {
         $datas = array();
-        foreach ($this->_results->data as $result) {
+        foreach ($this->_results as $result) {
             $class = ucfirst($result->type);
             $data = new $class($result->id);
             array_push($datas, $data);
