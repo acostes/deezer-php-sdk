@@ -85,7 +85,10 @@ abstract class Dz_Model_Abstract {
     private function _retrieveConnectionData($url) {
 
         $results = json_decode(file_get_contents($url));
-        array_push($this->_connectionData, $results->data); 
+
+        foreach ($results->data as $result) {
+            array_push($this->_connectionData, $result); 
+        }
 
         if (isset($results->next)) {
             $this->_retrieveConnectionData($type, $results->next);
