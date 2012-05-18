@@ -28,13 +28,13 @@ class Dz_Search {
         'DURATION_DESC',
     );
 
-    protected $_query = null;
+    protected $_query;
 
-    protected $_type = null;
+    protected $_type;
 
-    protected $_order = null;
+    protected $_order;
 
-    protected $_results;
+    protected $_results = array();
 
 
     public function __construct($query, $type = null, $order = null) {
@@ -59,9 +59,7 @@ class Dz_Search {
 
 
     public function search() {
-        $url = DEEZER_API_URL . '/search/' . $this->_type . '?q=' . $this->_query;
-
-        $this->_results = array();
+        $url = DEEZER_API_URL . '/search/' . $this->_type . '?q=' . $this->_query . '&order=' . $this->_order;
 
         $this->_parse($url);
 
