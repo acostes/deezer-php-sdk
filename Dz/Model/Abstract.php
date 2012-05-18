@@ -69,22 +69,20 @@ abstract class Dz_Model_Abstract {
         return $this->id;
     }
 
-    protected function _getConnection($type, $url = null) {
+    protected function _getConnection($type) {
         if (!in_array($type, $this->_connectionsType)) {
             throw new Dz_Exception($type . ' is not a valid connections type for ' . get_called_class());
         }
 
         $this->_connectionData = array();
+        $url = DEEZER_API_URL . '/' . strtolower(get_called_class()) . '/' . $this->id . '/' . strtolower($type);
 
-        $this->_retrieveConnectionData($type, $url);
+        $this->_retrieveConnectionData($url);
 
         return $this->_connectionData;
     }
 
-    private function _retrieveConnectionData($type, $url) {
-        if (!$url) {
-            $url = DEEZER_API_URL . '/' . strtolower(get_called_class()) . '/' . $this->id . '/' . strtolower($type);
-        }
+    private function _retrieveConnectionData($url) {
 
         $results = json_decode(file_get_contents($url));
 
