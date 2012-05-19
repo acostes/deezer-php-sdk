@@ -273,16 +273,18 @@ abstract class Dz_Model_Abstract {
      * @return an object of type variable
      */ 
     public function getPermissions() {
-        return null;
+        $this->permissions = $this->_getConnection('permissions');
+        return $this->permissions;
     }
 
     /**
-     * Get a list of Model's permissions
+     * Get a list of Model's personal songs
      *
      * @return an object of type variable
      */ 
     public function getPersonalSongs() {
-        return null;
+        $this->personal_songs = $this->_getConnection('personal_songs');
+        return $this->personal_songs;
     }
 
     /**
@@ -291,7 +293,8 @@ abstract class Dz_Model_Abstract {
      * @return an object of type variable
      */ 
     public function getItems() {
-        return null;
+        $this->items = $this->_getConnection('items');
+        return $this->items;
     }
 
     /**
