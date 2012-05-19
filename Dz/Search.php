@@ -9,11 +9,22 @@
  */
 class Dz_Search {
 
+
+    /**
+     * Possible connector value
+     *
+     * @var array
+     */
     protected $_typesValues = array(
         'album', 
         'artist'
     );
 
+    /**
+     * Possible order value 
+     *
+     * @var array
+     */
     protected $_orderValue = array(
         'RANKING',
         'TRACK_ASC',
@@ -28,15 +39,41 @@ class Dz_Search {
         'DURATION_DESC',
     );
 
+    /**
+     * The query string to search
+     *
+     * @var string
+     */
     protected $_query;
 
+    /**
+     * The type of search
+     *
+     * @var string
+     */
     protected $_type;
 
+    /**
+     * The order
+     *
+     * @var string
+     */
     protected $_order;
 
+    /**
+     * The result of the search
+     *
+     * @var arrat
+     */
     protected $_results = array();
 
-
+    /**
+     * Constructor
+     *
+     * @param string $query
+     * @param string $type
+     * @param string $order
+     */
     public function __construct($query, $type = null, $order = null) {
         
         if($type && !in_array(strtolower($type), $this->_typesValues)) {
@@ -49,15 +86,32 @@ class Dz_Search {
 
         $this->_query = $query;
         $this->_order = $order;
+        $this->_type = $type;
+    }
 
-        if($type) {
-            $this->_type = $type;
-        } else {
-            $this->_type = '';
-        }
+    /**
+     * Search an artist
+     */
+    public function searchArtist() {
+        $this->_type = 'artist';
+        search();
+    }
+
+    /**
+     * Search an album
+     */
+    public function searchAlbum() {
+        $this->_type = 'album';
+        search();
     }
 
 
+    /**
+     * Basique search function
+     * If no type specified it's search for tracks
+     *
+     * @return array
+     */
     public function search() {
         $url = DEEZER_API_URL . '/search/' . $this->_type . '?q=' . $this->_query . '&order=' . $this->_order;
 
@@ -66,6 +120,20 @@ class Dz_Search {
         return $this->_getAllDatas();
     }
 
+    /**
+     * Define the search order
+     *
+     * @param string
+     */
+    public function setOrder($order) {
+        $this->_order = $order;
+    }
+
+    /**
+     * Parse the search results
+     *
+     * @param string
+     */
     protected function _parse($url) {
         $results = json_decode(file_get_contents($url));
 
@@ -79,6 +147,11 @@ class Dz_Search {
 
     }
 
+    /**
+     * Retrieve all datas from the search
+     *
+     * @return array
+     */
     protected function _getAllDatas() {
         $datas = array();
         foreach ($this->_results as $result) {
