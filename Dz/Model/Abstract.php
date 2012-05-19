@@ -40,8 +40,11 @@ abstract class Dz_Model_Abstract {
 
     /**
      * Constructor
+     * You can construct an object by passing an integer
+     * In that case it makes a request to the API
+     * You also can put an object that will be copy
      *
-     * @param int $id
+     * @param int/object $param
      */
     protected function __construct($param) {
         if(!is_numeric($param) && !is_object($param)) {
@@ -63,20 +66,36 @@ abstract class Dz_Model_Abstract {
         $this->_init();
     }
 
+    /**
+     * Initialize the variable 
+     */
     protected function _init() {
         foreach ($this->_data as $key => $value) {
             $this->$key = $value;
         }
     }
 
+    /**
+     * Make a request to the API to get the object
+     */
     protected function _get() {
         $this->_data = json_decode(file_get_contents(DEEZER_API_URL . '/' . strtolower(get_called_class()) . '/' . $this->id));
     }
 
+    /**
+     * Return the id of the Abstract Object 
+     *
+     * @return int
+     */
     public function getId() {
         return $this->id;
     }
 
+    /**
+     * Retrieve data by using the allowed connector 
+     *
+     * @param string
+     */
     protected function _getConnection($type) {
         if (!in_array($type, $this->_connectionsType)) {
             throw new Dz_Exception($type . ' is not a valid connections type for ' . get_called_class());
@@ -90,6 +109,11 @@ abstract class Dz_Model_Abstract {
         return $this->_connectionData;
     }
 
+    /**
+     * Usefull to retrieve data of multiple page
+     *
+     * @param string
+     */
     private function _retrieveConnectionData($url) {
 
         $results = json_decode(file_get_contents($url));
