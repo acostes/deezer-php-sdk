@@ -83,7 +83,7 @@ class Dz_Search {
         $datas = array();
         foreach ($this->_results as $result) {
             $class = ucfirst($result->type);
-            $data = new $class($result->id);
+            $data = new $class($result);
             array_push($datas, $data);
         }
         return $datas;

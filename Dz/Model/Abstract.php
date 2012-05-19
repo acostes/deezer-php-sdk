@@ -43,19 +43,27 @@ abstract class Dz_Model_Abstract {
      *
      * @param int $id
      */
-    protected function __construct($id) {
-        if(!is_numeric($id)) {
-            throw new Dz_Exception('The first args of the class ' . get_called_class() . ' must be numeric');
+    protected function __construct($param) {
+        if(!is_numeric($param) && !is_object($param)) {
+            throw new Dz_Exception('The first args of the class ' . get_called_class() . ' must be numeric or an object');
         }
 
-        $this->id = $id;
-        $this->_get();
+        if (is_object($param)) {
+            if (ucfirst($param->type) != get_called_class()) {
+                throw new Dz_Exception('The object must be of the type ' . get_called_class());
+            } 
+
+            $this->_data = $param;
+
+        } elseif (is_numeric($param)) {
+            $this->id = $param;
+            $this->_get();
+        }
+
         $this->_init();
     }
 
     protected function _init() {
-        $this->id = $this->_data->id;
-
         foreach ($this->_data as $key => $value) {
             $this->$key = $value;
         }
