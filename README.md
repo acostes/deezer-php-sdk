@@ -10,7 +10,20 @@ The SDK also contains. The code in sample/ demonstrates the basic use of the SDK
 Getting Started
 ---------------
 
-1. Include deezer.php in your PHP project
-2. That's it !
+Package available Composer. Autoloading is PSR-0 compatible.
 
 
+How to use
+----------
+```php
+<?php
+  $search = new DeezerAPI\Search('eminem');
+  $datas = $search->search();
+
+  foreach ($datas as $data) {
+      var_dump($data->title);
+  }
+
+  $album = new DeezerAPI\Models\Album(302127);
+  var_dump($album->tracks);
+```
