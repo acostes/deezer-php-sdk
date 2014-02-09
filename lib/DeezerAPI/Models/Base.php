@@ -83,7 +83,10 @@ abstract class Base {
      * Make a request to the API to get the object
      */
     protected function _get() {
-        $this->_data = json_decode(file_get_contents(Search::DEEZER_API_URL . '/' . strtolower(get_called_class()) . '/' . $this->id));
+        $class = explode('\\', get_called_class());
+        $class = end($class);
+        $url = Search::DEEZER_API_URL . '/' . strtolower($class) . '/' . $this->id;
+        $this->_data = json_decode(file_get_contents($url));
     }
 
     /**
