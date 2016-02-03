@@ -132,7 +132,7 @@ abstract class Base {
         }
 
         if (isset($results->next)) {
-            $this->_retrieveConnectionData($type, $results->next);
+            $this->_retrieveConnectionData($results->next);
         }
     }
 
