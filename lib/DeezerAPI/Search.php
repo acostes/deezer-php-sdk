@@ -12,7 +12,7 @@ use DeezerAPI\Models\Track;
 
 class Search {
 
-    const DEEZER_API_URL = 'http://api.deezer.com/2.0';
+    const DEEZER_API_URL = 'https://api.deezer.com';
 
     /**
      * Possible connector value
@@ -20,12 +20,12 @@ class Search {
      * @var array
      */
     protected $_typesValues = array(
-        'album', 
+        'album',
         'artist'
     );
 
     /**
-     * Possible order value 
+     * Possible order value
      *
      * @var array
      */
@@ -67,9 +67,24 @@ class Search {
     /**
      * The result of the search
      *
-     * @var arrat
+     * @var array
      */
     protected $_results = array();
+
+    /**
+     * The amount of results
+     *
+     * @var int
+     */
+    protected $_limit;
+
+    /**
+     * Proceed to the next page ?
+     *
+     * @var boolean
+     */
+    protected $_gotoNextPage;
+
 
     /**
      * Constructor
@@ -77,9 +92,13 @@ class Search {
      * @param string $query
      * @param string $type
      * @param string $order
+     * @param int    $limit
+     * @param bool   $gotoNextPage
+     *
+     * @throws DeezerException
      */
-    public function __construct($query, $type = null, $order = null) {
-        
+    public function __construct($query, $type = null, $order = null, $limit=10, $gotoNextPage = true) {
+
         if($type && !in_array(strtolower($type), $this->_typesValues)) {
             throw new DeezerException($type . ' is not a valid search type');
         }
@@ -88,9 +107,11 @@ class Search {
             throw new DeezerException($order . ' is not a valid order type');
         }
 
-        $this->_query = $query;
-        $this->_order = $order;
-        $this->_type = $type;
+        $this->_query           = $query;
+        $this->_order           = $order;
+        $this->_type            = $type;
+        $this->_limit           = $limit;
+        $this->_gotoNextPage    = $gotoNextPage;
     }
 
     /**
@@ -98,7 +119,7 @@ class Search {
      */
     public function searchArtist() {
         $this->_type = 'artist';
-        search();
+        return $this->search();
     }
 
     /**
@@ -106,7 +127,7 @@ class Search {
      */
     public function searchAlbum() {
         $this->_type = 'album';
-        search();
+        return $this->search();
     }
 
 
@@ -117,7 +138,16 @@ class Search {
      * @return array
      */
     public function search() {
-        $url = self::DEEZER_API_URL . '/search/' . $this->_type . '?q=' . $this->_query . '&order=' . $this->_order;
+        $queryString = array(
+            'q' => $this->_query,
+            'limit' => $this->_limit
+        );
+
+        if (!$this->_order) {
+            $queryString['order'] = $this->_order;
+        }
+
+        $url = self::DEEZER_API_URL . '/search/' . $this->_type . '?' . http_build_query($queryString);
 
         $this->_parse($url);
 
@@ -145,7 +175,7 @@ class Search {
             array_push($this->_results, $result);
         }
 
-        if (isset($results->next)) {
+        if (isset($results->next) && $this->_gotoNextPage === true) {
             $this->_parse($results->next);
         }
 
