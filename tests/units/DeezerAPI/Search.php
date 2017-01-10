@@ -46,14 +46,6 @@ class Search extends atoum
         foreach ($result as $object) {
             $this->object($object)->isInstanceOf('DeezerAPI\Models\Base');
         }
-
-        $this->exception(
-            function () {
-                // Force overquota error
-                $search = new testedClass('eminem', null, null, 2);
-                $search->searchAlbum();
-            }
-        )->isInstanceOf('DeezerAPI\DeezerException');
     }
 
     public function test_searchAlbum()
