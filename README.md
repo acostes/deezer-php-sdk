@@ -1,6 +1,8 @@
 Deezer API SDK for PHP
 ======================
 
+[![Build pass](https://img.shields.io/travis/acostes/deezer-php-sdk/master.svg?style=flat-square)](https://travis-ci.org/acostes/deezer-php-sdk?branch=master)
+
 Overview
 --------
 This SDK contains wrapper code used to call the Deezer API from PHP. You can find the documentation of the API here http://developers.deezer.com/api
@@ -17,13 +19,18 @@ How to use
 ----------
 ```php
 <?php
-  $search = new DeezerAPI\Search('eminem');
-  $datas = $search->search();
+    use DeezerAPI\Search;
+    use DeezerAPI\Models\Album;
 
-  foreach ($datas as $data) {
-      var_dump($data->title);
-  }
+    $search = new DeezerAPI\Search('eminem');
+    $data = $search->search();
 
-  $album = new DeezerAPI\Models\Album(302127);
-  var_dump($album->tracks);
+    foreach ($data as $album) {
+        echo $album->title . "\n";
+    }
+
+    $album = new DeezerAPI\Models\Album(302127);
+    foreach ($album->tracks->data as $track) {
+        echo $track->title . "\n";
+    }
 ```

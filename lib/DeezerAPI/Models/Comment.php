@@ -1,14 +1,22 @@
 <?php
 
 /**
- * Comment class for Deezer API
+ * PHP library for using Deezzer API
  *
- * @author Arnaud COSTES <arnaud.costes@gmail.com>
+ * (c) Arnaud Costes <arnaud.costes@gmail.com>
+ *
+ * MIT License
  */
 
 namespace DeezerAPI\Models;
 
-class Comment extends Base {
+/**
+ * Comment class for Deezer API
+ *
+ * @author Arnaud COSTES <arnaud.costes@gmail.com>
+ */
+class Comment extends Base
+{
 
     /**
      * The content of the comment

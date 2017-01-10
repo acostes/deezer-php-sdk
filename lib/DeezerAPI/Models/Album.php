@@ -1,14 +1,22 @@
 <?php
 
 /**
- * Album class for Deezer API
+ * PHP library for using Deezzer API
  *
- * @author Arnaud COSTES <arnaud.costes@gmail.com>
+ * (c) Arnaud Costes <arnaud.costes@gmail.com>
+ *
+ * MIT License
  */
 
 namespace DeezerAPI\Models;
 
-class Album extends Base {
+/**
+ * Album class for Deezer API
+ *
+ * @author Arnaud COSTES <arnaud.costes@gmail.com>
+ */
+class Album extends Base
+{
 
     /**
      * The album's title
@@ -71,9 +79,9 @@ class Album extends Base {
      *
      * @var array
      */
-    protected $_connectionsType = array(
-        'comments', 
-        'fans', 
+    protected $connectionsType = array(
+        'comments',
+        'fans',
         'tracks',
     );
 }

@@ -1,9 +1,11 @@
 <?php
 
 /**
- * Abstract model class for Deezer API
+ * PHP library for using Deezzer API
  *
- * @author Arnaud COSTES <arnaud.costes@gmail.com>
+ * (c) Arnaud Costes <arnaud.costes@gmail.com>
+ *
+ * MIT License
  */
 
 namespace DeezerAPI\Models;
@@ -11,28 +13,34 @@ namespace DeezerAPI\Models;
 use DeezerAPI\Search;
 use DeezerAPI\DeezerException;
 
-abstract class Base {
+/**
+ * Abstract model class for Deezer API
+ *
+ * @author Arnaud COSTES <arnaud.costes@gmail.com>
+ */
+abstract class Base
+{
 
     /**
-     * The data 
+     * The data
      *
      * @var array
      */
-    protected $_data;
+    protected $data;
 
     /**
-     * The object copy 
+     * The object copy
      *
      * @var object
      */
-    protected $_connectionData = array();
+    protected $connectionData = array();
 
     /**
      * Model connections type
      *
      * @var array
      */
-    protected $_connectionsType = array();
+    protected $connectionsType = array();
 
     /**
      * The deezer id
@@ -50,31 +58,37 @@ abstract class Base {
      *
      * @param int/object $param
      */
-    public function __construct($param) {
-        if(!is_numeric($param) && !is_object($param)) {
-            throw new DeezerException('The first args of the class ' . get_called_class() . ' must be numeric or an object');
+    public function __construct($param)
+    {
+        if (!is_numeric($param) && !is_object($param)) {
+            throw new DeezerException('Argument of the class ' . get_called_class() . ' must be numeric or an object');
         }
 
         if (is_object($param)) {
-            if ('DeezerAPI\Models\\' . ucfirst($param->type) != get_called_class()) {
+            if (empty($param->type) || ('DeezerAPI\Models\\' . ucfirst($param->type) != get_called_class())) {
                 throw new DeezerException('The object must be of the type ' . get_called_class());
-            } 
+            }
 
-            $this->_data = $param;
+            $this->data = $param;
 
         } elseif (is_numeric($param)) {
             $this->id = $param;
-            $this->_get();
+            $this->get();
         }
 
-        $this->_init();
+        $this->init();
     }
 
     /**
-     * Initialize the variable 
+     * Initialize the variable
      */
-    protected function _init() {
-        foreach ($this->_data as $key => $value) {
+    protected function init()
+    {
+        if (isset($this->data->error)) {
+            throw new DeezerException($this->data->error->message, $this->data->error->code);
+        }
+
+        foreach ($this->data as $key => $value) {
             $this->$key = $value;
         }
     }
@@ -82,40 +96,43 @@ abstract class Base {
     /**
      * Make a request to the API to get the object
      */
-    protected function _get() {
+    protected function get()
+    {
         $class = explode('\\', get_called_class());
         $class = end($class);
         $url = Search::DEEZER_API_URL . '/' . strtolower($class) . '/' . $this->id;
-        $this->_data = json_decode(file_get_contents($url));
+        $this->data = json_decode(file_get_contents($url));
     }
 
     /**
-     * Return the id of the Abstract Object 
+     * Return the id of the Abstract Object
      *
      * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
-     * Retrieve data by using the allowed connector 
+     * Retrieve data by using the allowed connector
      *
      * @param string
      */
-    protected function _getConnection($type) {
-        if (!in_array($type, $this->_connectionsType)) {
+    protected function getConnection($type)
+    {
+        if (!in_array($type, $this->connectionsType)) {
             throw new DeezerException($type . ' is not a valid connections type for ' . get_called_class());
         }
 
-        $this->_connectionData = array();
+        $this->connectionData = array();
         $class = explode('\\', get_called_class());
 
         $url = Search::DEEZER_API_URL . '/' . strtolower(end($class)) . '/' . $this->id . '/' . strtolower($type);
 
-        $this->_retrieveConnectionData($url);
+        $this->retrieveConnectionData($url);
 
-        return $this->_connectionData;
+        return $this->connectionData;
     }
 
     /**
@@ -123,16 +140,17 @@ abstract class Base {
      *
      * @param string
      */
-    private function _retrieveConnectionData($url) {
+    private function retrieveConnectionData($url)
+    {
 
         $results = json_decode(file_get_contents($url));
 
         foreach ($results->data as $result) {
-            array_push($this->_connectionData, $result); 
+            array_push($this->connectionData, $result);
         }
 
         if (isset($results->next)) {
-            $this->_retrieveConnectionData($results->next);
+            $this->retrieveConnectionData($results->next);
         }
     }
 
@@ -141,12 +159,12 @@ abstract class Base {
      *
      * @return mixed
      */
-    public function __get($name) {
-        var_dump($name);
-        if (!in_array($name, $this->_connectionsType)) {
+    public function __get($name)
+    {
+        if (!in_array($name, $this->connectionsType)) {
             throw new DeezerException('Unsupported operation: ' . $name);
         }
-        $result = $this->_getConnection($name);
-        return $result;
+
+        return $this->getConnection($name);
     }
 }

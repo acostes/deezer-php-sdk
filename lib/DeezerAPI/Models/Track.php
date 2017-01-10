@@ -1,15 +1,23 @@
 <?php
 
 /**
- * Track class for Deezer API
+ * PHP library for using Deezzer API
  *
- * @author Arnaud COSTES <arnaud.costes@gmail.com>
+ * (c) Arnaud Costes <arnaud.costes@gmail.com>
+ *
+ * MIT License
  */
 
 namespace DeezerAPI\Models;
 
-class Track extends Base {
-    
+/**
+ * Track class for Deezer API
+ *
+ * @author Arnaud COSTES <arnaud.costes@gmail.com>
+ */
+class Track extends Base
+{
+
     /**
      * true if the track is readable in the player for the current user
      *
@@ -18,7 +26,7 @@ class Track extends Base {
     public $readable;
 
     /**
-     * The track's title 
+     * The track's title
      *
      * @var string
      */
@@ -67,7 +75,7 @@ class Track extends Base {
     public $release_date;
 
     /**
-     * Artist object 
+     * Artist object
      *
      * @var object
      */

@@ -1,14 +1,22 @@
 <?php
 
 /**
- * Playlist class for Deezer API
+ * PHP library for using Deezzer API
  *
- * @author Arnaud COSTES <arnaud.costes@gmail.com>
+ * (c) Arnaud Costes <arnaud.costes@gmail.com>
+ *
+ * MIT License
  */
 
 namespace DeezerAPI\Models;
 
-class Playlist extends Base {
+/**
+ * Playlist class for Deezer API
+ *
+ * @author Arnaud COSTES <arnaud.costes@gmail.com>
+ */
+class Playlist extends Base
+{
 
     /**
      * The playlist's title
@@ -50,9 +58,9 @@ class Playlist extends Base {
      *
      * @var array
      */
-    protected $_connectionsType = array(
-        'comments', 
-        'fans', 
+    protected $connectionsType = array(
+        'comments',
+        'fans',
         'tracks',
     );
 }

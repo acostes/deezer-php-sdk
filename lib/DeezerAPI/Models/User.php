@@ -1,14 +1,22 @@
 <?php
 
 /**
- * User class for Deezer API
+ * PHP library for using Deezzer API
  *
- * @author Arnaud COSTES <arnaud.costes@gmail.com>
+ * (c) Arnaud Costes <arnaud.costes@gmail.com>
+ *
+ * MIT License
  */
 
 namespace DeezerAPI\Models;
 
-class User extends Base {
+/**
+ * User class for Deezer API
+ *
+ * @author Arnaud COSTES <arnaud.costes@gmail.com>
+ */
+class User extends Base
+{
 
     /**
      * The user's Deezer nickname
@@ -85,9 +93,9 @@ class User extends Base {
      *
      * @var array
      */
-    protected $_connectionsType = array(
-        'albums', 
-        'artists', 
+    protected $connectionsType = array(
+        'albums',
+        'artists',
         'charts',
         'folders',
         'followings',
